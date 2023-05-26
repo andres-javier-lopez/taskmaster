@@ -1,0 +1,13 @@
+name: "taskmaster"
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: ../docker/api.dockerfile
+      target: app
+    ports:
+     - 8001:8001
+    env_file: .env
+    command: "sh scripts/launch-api.local.sh"
+    volumes:
+      - ./api:/usr/src/app
