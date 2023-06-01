@@ -18,3 +18,10 @@ services:
     profiles: [ "test" ]
     volumes:
       - ./api:/usr/src/app
+  test:
+    image: taskmaster-api
+    env_file: .env
+    command: "sh scripts/test.sh"
+    profiles: [ "test" ]
+    volumes:
+      - ./api:/usr/src/app
