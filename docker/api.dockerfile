@@ -9,8 +9,8 @@ COPY pyproject.toml .
 COPY poetry.lock .
 
 RUN poetry config virtualenvs.create true && \
-poetry config virtualenvs.in-project true && \
-poetry install --no-dev --no-root
+    poetry config && \
+    poetry install --no-dev --no-root
 
 FROM req AS code
 
