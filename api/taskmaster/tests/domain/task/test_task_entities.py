@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from taskmaster.domain.tasks.entities import Task, TaskStatus
+from taskmaster.domain.tasks.entities import Task
 
 
 def test_new_task_required_fields():
@@ -29,18 +29,18 @@ def test_new_task_optional_fields():
 
 def test_task_schedule(task_factory):
     task: Task = task_factory()
-    assert task.status == TaskStatus.queued
+    assert task.status == Task.Status.queued
     assert task.scheduled_date is None
     assert task.scheduled_time is None
 
     now = datetime.now()
     task.schedule_for(date=now.date(), time=now.time())
-    assert task.status == TaskStatus.scheduled
+    assert task.status == Task.Status.scheduled
     assert task.scheduled_date == now.date()
     assert task.scheduled_time == now.time()
 
     task.unschedule()
-    assert task.status == TaskStatus.queued
+    assert task.status == Task.Status.queued
     assert task.scheduled_date is None
     assert task.scheduled_time is None
 
@@ -52,7 +52,7 @@ def test_task_overdue(task_factory):
     assert task.must_be_done is True
 
     task.update_status_for_date(datetime.now())
-    assert task.status == TaskStatus.overdue
+    assert task.status == Task.Status.overdue
 
 
 def test_task_dropped(task_factory):
@@ -62,5 +62,5 @@ def test_task_dropped(task_factory):
     assert task.must_be_done is False
 
     task.update_status_for_date(datetime.now())
-    assert task.status == TaskStatus.dropped
+    assert task.status == Task.Status.dropped
     assert not task.is_open
