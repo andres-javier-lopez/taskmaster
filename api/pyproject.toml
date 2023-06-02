@@ -28,7 +28,9 @@ build-backend = "poetry.core.masonry.api"
 # make it compatible with black
 profile = "black" 
 
-# pyproject.toml
 [tool.pytest.ini_options]
 addopts = "--cov=taskmaster"
 testpaths = "taskmaster"
+
+[tool.coverage.run]
+omit = [ "taskmaster/tests/*" ]
