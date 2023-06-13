@@ -13,7 +13,7 @@ class TasksFilter(Enum):
 class TasksStorage(BaseStorage):
     Filter = TasksFilter
 
-    async def list(self, filter: dict[Filter, Any]) -> list[Task]:
+    async def list(self, filter: dict[Filter, Any] = None) -> list[Task]:
         return await self.adapter.list(filter)
 
     async def get(self, uuid: UUID) -> Task | None:

@@ -7,19 +7,19 @@ from taskmaster.core.entities import Entity
 class BaseAdapter(ABC):
     @abstractmethod
     async def list(self, **kwargs) -> list[Entity]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     async def get(self, uuid: UUID) -> Entity:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     async def save(self, entity: Entity):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     async def delete(self, uuid: UUID):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class BaseStorage(ABC):

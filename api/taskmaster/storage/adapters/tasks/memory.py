@@ -10,8 +10,8 @@ class TasksMemoryAdapter(BaseAdapter):
     def __init__(self):
         self.tasks: dict[UUID, Task] = {}
 
-    async def list(self, filter: dict[TasksFilter, Any]) -> list[Task]:
-        return self.tasks
+    async def list(self, filter: dict[TasksFilter, Any] = None) -> list[Task]:
+        return list(self.tasks.values())
 
     async def get(self, uuid: UUID) -> Task | None:
         return self.tasks.get(uuid)
@@ -20,4 +20,4 @@ class TasksMemoryAdapter(BaseAdapter):
         self.tasks[task.uuid] = task
 
     async def delete(self, uuid: UUID):
-        del self.task[uuid]
+        del self.tasks[uuid]
