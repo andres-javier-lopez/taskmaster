@@ -6,25 +6,30 @@ from typing import Optional
 from taskmaster.core.entities import Entity
 
 
+class TaskStatus(str, Enum):
+    queued = "queued"
+    scheduled = "scheduled"
+    finished = "finished"
+    dropped = "dropped"
+    overdue = "overdue"
+
+
+class TaskMood(Enum):
+    very_stressed = -3
+    stressed = -2
+    uncomfortable = -1
+    neutral = 0
+    good = 1
+    excited = 2
+    very_excited = 3
+
+
 @dataclass
 class Task(Entity):
     """Represent a pending task on our list"""
 
-    class Status(str, Enum):
-        queued = "queued"
-        scheduled = "scheduled"
-        finished = "finished"
-        dropped = "dropped"
-        overdue = "overdue"
-
-    class Mood(Enum):
-        very_stressed = -3
-        stressed = -2
-        uncomfortable = -1
-        neutral = 0
-        good = 1
-        excited = 2
-        very_excited = 3
+    Status = TaskStatus
+    Mood = TaskMood
 
     # required fields
     title: str
