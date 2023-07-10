@@ -1,5 +1,6 @@
 import dataclasses
 import json
+from typing import Optional
 from uuid import UUID, uuid4
 
 from taskmaster.core.encoder import CustomEncoder
@@ -9,6 +10,7 @@ from taskmaster.core.encoder import CustomEncoder
 class Entity:
     # To avoid conflicts with inherited dataclasses use kw_only=True
     uuid: UUID = dataclasses.field(default_factory=uuid4, kw_only=True)
+    index: Optional[int] = dataclasses.field(default=None, kw_only=True)
 
     def __post_init__(self):
         for field in dataclasses.fields(self):
