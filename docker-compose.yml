@@ -11,6 +11,8 @@ services:
     command: "sh scripts/launch-api.local.sh"
     volumes:
       - ./api:/usr/src/app
+    depends_on:
+      - redis
   lint:
     image: taskmaster-api
     env_file: .env
@@ -25,3 +27,9 @@ services:
     profiles: [ "test" ]
     volumes:
       - ./api:/usr/src/app
+    depends_on:
+      - redis
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
