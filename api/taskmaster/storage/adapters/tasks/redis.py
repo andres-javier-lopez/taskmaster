@@ -15,7 +15,14 @@ class TasksRedisAdapter(BaseAdapter):
     prefix = "tasks:"
 
     def __init__(self):
+        self.redis = None
+
+    async def __aenter__(self):
         self.redis = Redis(host=REDIS_URL)
+        return self
+
+    async def __aexit__(self, exc_type, exc_value, exc_tb):
+        await self.redis.close()
 
     async def _get_task(self, key) -> Task | None:
         json_data = await self.redis.get(key)
