@@ -1,5 +1,8 @@
+import pytest
+
 from taskmaster.domain.tasks.entities import Task
 from taskmaster.storage.adapters.tasks.memory import TasksMemoryAdapter
+from taskmaster.storage.adapters.tasks.psql import TasksPsqlAdapter
 from taskmaster.storage.adapters.tasks.redis import TasksRedisAdapter
 from taskmaster.storage.managers.tasks import TasksStorage
 
@@ -67,3 +70,25 @@ async def test_tasks_redis_adapter(task_factory):
         assert (await adapter.list()) == tasks
 
         await adapter.redis.flushall()
+
+
+async def test_task_model(task_factory):
+    task: Task = task_factory()
+
+    from taskmaster.storage.adapters.tasks.psql.model import TaskModel
+
+    model = TaskModel.from_entity(task)
+    print(model)
+    assert model
+    assert model.uuid == task.uuid
+
+    task_from_model = model.to_entity()
+    print(task_from_model)
+    assert task.uuid == task_from_model.uuid
+    assert task == task_from_model
+
+
+@pytest.mark.xfail
+async def test_task_psql_adapter(task_factory):
+    async with TasksPsqlAdapter() as adapter:
+        assert (await adapter.list()) == []

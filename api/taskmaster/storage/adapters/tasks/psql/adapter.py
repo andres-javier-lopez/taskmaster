@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from taskmaster.core.entities import Entity
-from taskmaster.core.sqlalchemy.adapter import BaseSQLAlchemyAdapter
+from taskmaster.core.sqlalchemy.base import BaseSQLAlchemyAdapter
 
 
 class TasksPsqlAdapter(BaseSQLAlchemyAdapter):
