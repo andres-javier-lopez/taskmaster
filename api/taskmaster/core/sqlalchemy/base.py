@@ -1,4 +1,4 @@
-from abc import abstractmethod
+import dataclasses
 from typing import Optional
 from uuid import UUID
 
@@ -25,9 +25,16 @@ class BaseSQLAlchemyAdapter(BaseAdapter):
 
 
 class BaseModel(AsyncAttrs, DeclarativeBase):
+    ModelEntity = None
+
     uuid: Mapped[UUID] = mapped_column(primary_key=True)
     index: Mapped[Optional[int]] = mapped_column(default=None)
 
-    @abstractmethod
     def to_entity(self) -> Entity:
-        raise NotImplementedError
+        fields = dataclasses.fields(self.ModelEntity)
+        dict_fields = {field.name: getattr(self, field.name) for field in fields}
+        return self.ModelEntity(**dict_fields)
+
+    @classmethod
+    def from_entity(cls, entity: Entity):
+        return cls(**dataclasses.asdict(entity))
