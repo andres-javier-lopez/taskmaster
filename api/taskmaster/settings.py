@@ -1,1 +1,4 @@
+import os
+
 REDIS_URL = "redis"
+PSQL_CONNECTION_STRING = os.getenv("PSQL_CONNECTION_STRING")
