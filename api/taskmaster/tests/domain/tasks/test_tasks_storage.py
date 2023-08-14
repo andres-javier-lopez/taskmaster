@@ -78,12 +78,10 @@ async def test_task_model(task_factory):
     from taskmaster.storage.adapters.tasks.psql.model import TaskModel
 
     model = TaskModel.from_entity(task)
-    print(model)
     assert model
     assert model.uuid == task.uuid
 
     task_from_model = model.to_entity()
-    print(task_from_model)
     assert task.uuid == task_from_model.uuid
     assert task == task_from_model
 
