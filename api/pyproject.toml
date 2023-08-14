@@ -11,6 +11,8 @@ python = "^3.11"
 fastapi = "^0.95.2"
 uvicorn = "^0.22.0"
 redis = "^4.5.5"
+sqlalchemy = "^2.0.19"
+asyncpg = "^0.28.0"
 
 
 [tool.poetry.group.dev.dependencies]
