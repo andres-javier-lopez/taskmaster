@@ -15,6 +15,7 @@ services:
       - ./api:/usr/src/app
     depends_on:
       - redis
+      - db
   lint:
     image: taskmaster-api
     env_file: .env
