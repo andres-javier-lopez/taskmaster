@@ -40,6 +40,11 @@ async def test_tasks_storage_manager(adapter, task_factory):
     assert (await storage.list()) == [task]
     assert task == (await storage.get(task.uuid))
 
+    task.title = "modified"
+    await storage.save(task)
+    modified_task = await storage.get(task.uuid)
+    assert modified_task.title == "modified"
+
     await storage.delete(task.uuid)
     assert (await storage.list()) == []
     assert await storage.get(task.uuid) is None

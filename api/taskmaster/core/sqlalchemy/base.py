@@ -25,6 +25,11 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         dict_fields = {field.name: getattr(self, field.name) for field in fields}
         return self.ModelEntity(**dict_fields)
 
+    def update_from(self, entity: Entity):
+        fields = dataclasses.asdict(entity)
+        for field, value in fields.items():
+            setattr(self, field, value)
+
     @classmethod
     def from_entity(cls, entity: Entity):
         return cls(**dataclasses.asdict(entity))
