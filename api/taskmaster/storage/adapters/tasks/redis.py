@@ -3,26 +3,16 @@ import json
 from typing import Any
 from uuid import UUID
 
-from redis.asyncio import Redis
-
 from taskmaster.core.storage import BaseAdapter
 from taskmaster.domain.tasks.entities import Task
-from taskmaster.settings import REDIS_URL
 from taskmaster.storage.managers.tasks import TasksFilter
 
 
 class TasksRedisAdapter(BaseAdapter):
     prefix = "tasks:"
 
-    def __init__(self):
-        self.redis = None
-
-    async def __aenter__(self):
-        self.redis = Redis(host=REDIS_URL)
-        return self
-
-    async def __aexit__(self, exc_type, exc_value, exc_tb):
-        await self.redis.close()
+    def __init__(self, redis):
+        self.redis = redis
 
     async def _get_task(self, key) -> Task | None:
         json_data = await self.redis.get(key)
