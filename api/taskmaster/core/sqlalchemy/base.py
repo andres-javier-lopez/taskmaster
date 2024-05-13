@@ -2,26 +2,22 @@ import dataclasses
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncAttrs
+from sqlalchemy.ext.asyncio import AsyncAttrs, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from taskmaster.core.entities import Entity
-from taskmaster.core.sqlalchemy import get_connection
 from taskmaster.core.storage import BaseAdapter
 
 
 class BaseSQLAlchemyAdapter(BaseAdapter):
-    def __init__(self):
-        self.conn = None
+    def __init__(self, session: AsyncSession):
+        self.session: AsyncSession = session
 
     async def __aenter__(self):
-        self.conn = await get_connection().__aenter__()
         return self
 
     async def __aexit__(self, *args, **kwargs):
-        old_conn = self.conn
-        self.conn = None
-        await old_conn.__aexit__(*args, **kwargs)
+        pass
 
 
 class BaseModel(AsyncAttrs, DeclarativeBase):
