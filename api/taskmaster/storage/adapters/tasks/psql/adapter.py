@@ -27,8 +27,12 @@ class TasksPsqlAdapter(BaseSQLAlchemyAdapter):
             return None
 
     async def save(self, task: Task):
-        task_model = TaskModel.from_entity(task)
-        self.session.add(task_model)
+        task_model = await self._get_model(task.uuid)
+        if task_model:
+            task_model.update_from(task)
+        else:
+            task_model = TaskModel.from_entity(task)
+            self.session.add(task_model)
         await self.session.commit()
 
     async def delete(self, uuid: UUID):
