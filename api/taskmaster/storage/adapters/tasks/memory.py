@@ -10,12 +10,6 @@ class TasksMemoryAdapter(BaseAdapter):
     def __init__(self):
         self.tasks: dict[UUID, Task] = {}
 
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, exc_type, exc_value, ex_tb):
-        pass
-
     async def list(self, filter: dict[TasksFilter, Any] = None) -> list[Task]:
         return list(self.tasks.values())
 

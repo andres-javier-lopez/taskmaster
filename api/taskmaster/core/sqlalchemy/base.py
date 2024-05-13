@@ -13,12 +13,6 @@ class BaseSQLAlchemyAdapter(BaseAdapter):
     def __init__(self, session: AsyncSession):
         self.session: AsyncSession = session
 
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, *args, **kwargs):
-        pass
-
 
 class BaseModel(AsyncAttrs, DeclarativeBase):
     ModelEntity = None
