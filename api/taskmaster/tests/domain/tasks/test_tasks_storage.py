@@ -7,8 +7,17 @@ from taskmaster.storage.adapters.tasks.redis import TasksRedisAdapter
 from taskmaster.storage.managers.tasks import TasksStorage
 
 
-async def test_tasks_storage_manager(task_factory):
-    adapter = TasksMemoryAdapter()
+@pytest.fixture
+async def adapter(request, sessionmaker):
+    if request.param == "memory":
+        yield TasksMemoryAdapter()
+    elif request.param == "psql":
+        async with sessionmaker() as session:
+            yield TasksPsqlAdapter(session)
+
+
+@pytest.mark.parametrize("adapter", ["memory", "psql"], indirect=True)
+async def test_tasks_storage_manager(adapter, task_factory):
     async with TasksStorage.context(adapter) as storage:
         assert (await storage.list()) == []
 
@@ -86,7 +95,22 @@ async def test_task_model(task_factory):
     assert task == task_from_model
 
 
-@pytest.mark.xfail
-async def test_task_psql_adapter(task_factory):
-    async with TasksPsqlAdapter() as adapter:
+async def test_task_psql_adapter(sessionmaker, task_factory):
+    async with sessionmaker() as session:
+        async with TasksPsqlAdapter(session) as adapter:
+            assert (await adapter.list()) == []
+
+        task: Task = task_factory()
+        await adapter.save(task)
+
+        assert (await adapter.list()) == [task]
+        assert task == (await adapter.get(task.uuid))
+
+        await adapter.delete(task.uuid)
         assert (await adapter.list()) == []
+        assert await adapter.get(task.uuid) is None
+
+        tasks: list[Task] = task_factory(n=5)
+        for task in tasks:
+            await adapter.save(task)
+        assert (await adapter.list()) == tasks
